@@ -1,0 +1,283 @@
+
+
+
+
+#password > focusout change > e.type ++ change
+signUpHelpers.js:223 passwordOnChangeFocusout ++
+signUpHelpers.js:434 validateParams ++
+signUpHelpers.js:152 #password > focusout change > e.type ++ focusout
+signUpHelpers.js:223 passwordOnChangeFocusout ++
+
+
+
+
+
+
+
+
+
+
+#### helper.testUserInput(elementID,pattern); ####
+
+$('#displayname').on('focusout', function(e) {
+    helper.handleFormEvents('displayname');
+});
+
+
+
+$('#email').on('focusout change', function(e) {
+    //console.log('#email > focusout change ++');
+    helper.handleFormEvents('email','confirmEmail', e.type);
+});
+
+
+
+$('#confirmEmail').on('focusout change', function(e) {
+    //console.log('#confirmEmail > focusout change ++');
+    helper.handleFormEvents('confirmEmail','email', e.type);
+});
+
+
+
+$('#password').on('focusout change', function(e) {
+    //console.log('#password > focusout change ++');
+    helper.handleFormEvents('password','confirmPassword', e.type);
+});
+
+
+
+$('#confirmPassword').on('focusout change', function(e) {
+    //console.log('#confirmPassword > focusout change ++');
+    helper.handleFormEvents('confirmPassword','password', e.type);
+});
+
+
+
+$('#firstname').on('focusout', function(e) {
+    helper.handleFormEvents('firstname');
+});
+
+$('#lastname').on('focusout', function(e) {
+    helper.handleFormEvents('lastname');
+});
+
+$('#city').on('focusout', function(e) {
+    helper.handleFormEvents('city');
+});
+
+$('#state').on('focusout change', function(e) {
+    helper.handleFormEvents('state');
+});
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+			(focusout)
+$('#displayname')   > helper.testUserInput(elementID,pattern);
+
+
+
+
+			(change)
+$('#email')         > helper.validateEmailField(elementID, confirmElementID);
+
+			(focusout)
+                    > helper.testUserInputEmail(elementID);	
+
+
+
+
+			(change)
+$('#password')      > helper.validateParams('password', 'confirmPassword');
+
+			(focusout)
+                    > helper.testUserInput(elementID,pattern);
+
+
+
+
+
+
+
+
+
+
+
+
+
+Change ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	EMAIL:
+
+		onchange="helper.validateEmailField(this.value, 'email', 'confirmEmail');"
+
+		onchange="helper.validateEmailField(this.value, 'confirmEmail', 'email');"
+
+
+	PASSWORD:
+
+		onchange="helper.validateParams('password', 'confirmPassword')"
+
+		onchange="helper.validateParams('password', 'confirmPassword')"
+
+
+
+
+Foucusout +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+validateEmailField: function(email, field, field2) {
+
+	if (helper.validateEmailValue(email)) {
+
+		* Hide Email Improper Format
+
+		if(helper.validateRegisteredUserService(email)){
+
+			* Show Email Registered Error
+			* return false
+
+		}else{
+			* Hide Email Registered Error
+
+            		if(helper.validateParams(field, field2)){
+
+				* return true
+
+            		} else{
+
+                		* return false
+            		}
+		}
+
+	}else{
+
+		* Show Email Improper Format
+		* return false
+	}
+}
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+validateParams: function(str1, str2) {
+
+	if ($('#' + str2).val() != '') {
+
+		if (property1.value != property2.value) {
+
+			* Show Emails/Passwords don't match 
+			* return false
+
+		}else{
+			* Hide Emails/Passwords don't match 
+			* return true
+		}
+	}
+}
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    testUserInputEmail: function(elemName) {
+        var thisElementValue = $('#'+elemName).val();
+        var thisErrorElement = $('#'+elemName+'Error');
+        var title = $('#'+elemName).attr('title');
+
+        if (helper.validateEmailValue(thisElementValue)) {
+            is_safari ? thisErrorElement.text('') : null;
+            is_safari ? thisErrorElement.removeClass('show').addClass('hide') : null;
+            $('#'+elemName).off('input');
+
+        }else if(thisElementValue === ''){
+            is_safari ? thisErrorElement.text('Please fill out this field. ' + title) : null;
+            is_safari ? thisErrorElement.removeClass('hide').addClass('show') : null;
+
+        }else{
+            is_safari ? thisErrorElement.text('Please enter an email address. ' + title) : null;
+            is_safari ? thisErrorElement.removeClass('hide').addClass('show') : null;
+        }
+    }
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    testUserInput: function(elemName,pattern) {
+        console.log('testUserInput ++');
+        var thisElementID = $('#'+elemName).attr('id');
+        var thisElementValue = $('#'+elemName).val();
+        var patternTestValue = pattern.test(thisElementValue);
+        var charCount = thisElementValue.length;
+        var errorElement = $('#'+thisElementID+'Error');
+        var title = $('#'+elemName).attr('title');
+
+        if(thisElementValue === ''){
+            is_safari ? errorElement.text('Please fill out this field. '+ title) : null;
+            is_safari ? errorElement.removeClass('hide').addClass('show') : null;
+        }else if(charCount > 0 && charCount < 4){
+
+            if(elemName.indexOf('confirm') != -1) {
+                is_safari ? errorElement.text('Invalid input. '+ title) : null;
+                is_safari ? errorElement.removeClass('hide').addClass('show') : null;
+                !is_safari ? $('#'+thisField).get(0).setCustomValidity('Invalid input. '+ title) : null;
+
+            }else{
+                is_safari ? errorElement.text('Please enter at least 4 character(s). You entered '+charCount+'. '+ title) : null;
+                is_safari ? errorElement.removeClass('hide').addClass('show') : null;
+            }
+
+        }else if(charCount >= 4){
+
+            if(!patternTestValue){
+                is_safari ? errorElement.text('Invalid input. '+$('#'+elemName).attr('title')) : null;
+                is_safari ? errorElement.removeClass('hide').addClass('show') : null;
+                !is_safari ? $('#'+thisField).get(0).setCustomValidity('Invalid input. '+ title) : null;
+
+            }else{
+                is_safari ? errorElement.text('') : null;
+                is_safari ? errorElement.removeClass('show').addClass('hide') : null;
+                !is_safari ? $('#'+thisField).get(0).setCustomValidity('') : null;
+                $('#'+elemName).off('input');
+            }
+        }
+    }
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+
+Don't use .trigger() simply to execute specific functions
+
+While this method has its uses, it should not be used simply to call a function that was bound as a click handler. Instead, you should store the function you want to call in a variable, and pass the variable name when you do your binding. Then, you can call the function itself whenever you want, without the need for .trigger().
+
+
+// Triggering an event handler the right way
+
+var foo = function( event ) {
+    if ( event ) {
+        console.log( event );
+    } else {
+        console.log( "this didn't come from an event!" );
+    }
+};
+ 
+$( "p" ).on( "click", foo );
+ 
+foo(); // instead of $( "p" ).trigger( "click" )
+
+
+
+
+
+
